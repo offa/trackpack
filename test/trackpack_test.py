@@ -17,6 +17,7 @@
 
 import unittest
 from unittest.mock import patch, call
+import os
 import trackpack
 
 
@@ -25,7 +26,8 @@ class TestTrackPack(unittest.TestCase):
     @patch("os.walk")
     def test_find_audiofiles_returns_audio_files(self, walk_mock):
         walk_mock.return_value = _create_walk_files(['proj stem2.wav', 'proj stem4.wav',
-                                                     'proj stem1.wav', 'proj.wav', 'proj stem3.wav'])
+                                                     'proj stem1.wav', 'proj.wav',
+                                                     'proj stem3.wav'])
 
         (master, stems) = trackpack.find_audiofiles("proj", "/tmp/export")
         walk_mock.assert_called_with('/tmp/export')
@@ -36,7 +38,8 @@ class TestTrackPack(unittest.TestCase):
     @patch("os.walk")
     def test_find_audiofiles_returns_only_related_audio_files(self, walk_mock):
         walk_mock.return_value = _create_walk_files(['proj stem2.wav', 'ignore.txt',
-                                                     'proj stem1.wav', 'proj.wav', 'archive.zip', "proj unrelated.mp3"])
+                                                     'proj stem1.wav', 'proj.wav', 'archive.zip',
+                                                     "proj unrelated.mp3"])
 
         (_, stems) = trackpack.find_audiofiles("proj", "/tmp/export")
         self.assertListEqual(['proj stem2.wav', 'proj stem1.wav'], stems)
@@ -44,7 +47,8 @@ class TestTrackPack(unittest.TestCase):
     @patch("os.walk")
     def test_find_audiofiles_master_track_matches_project_name(self, walk_mock):
         walk_mock.return_value = _create_walk_files(['example.wav', 'proj stem4.wav',
-                                                     'proj stem1.wav', 'proj.wav', 'proj stem3.wav'])
+                                                     'proj stem1.wav', 'proj.wav',
+                                                     'proj stem3.wav'])
         (master, _) = trackpack.find_audiofiles("example", "/tmp/export")
         self.assertEqual('example.wav', master)
 
@@ -65,23 +69,32 @@ class TestTrackPack(unittest.TestCase):
     @patch("trackpack.ZipFile", autospec=True)
     def test_pack_files_creates_archive_of_stems(self, zip_mock):
         trackpack.pack_files("/tmp/projdir", "projname", ["a.wav", "b.wav", "c.wav"])
-        zip_mock.assert_has_calls([call("/tmp/projdir/projname.zip", "w"),
-                                   call().__enter__(),
-                                   call().__enter__().write("/tmp/projdir/a.wav", "a.wav"),
-                                   call().__enter__().write("/tmp/projdir/b.wav", "b.wav"),
-                                   call().__enter__().write("/tmp/projdir/c.wav", "c.wav"),
-                                   call().__exit__(None, None, None)])
+        zip_mock.assert_has_calls(_create_zip_mock_calls("projname", "/tmp/projdir", {
+            "a.wav": "a.wav",
+            "b.wav": "b.wav",
+            "c.wav": "c.wav"
+        }))
 
     @patch("trackpack.ZipFile", autospec=True)
     def test_pack_files_removes_project_name_from_stems(self, zip_mock):
         trackpack.pack_files("/tmp/x", "proj1", ["proj1 a.wav", "b.wav", "proj1 c.wav"])
-        zip_mock.assert_has_calls([call("/tmp/x/proj1.zip", "w"),
-                                   call().__enter__(),
-                                   call().__enter__().write("/tmp/x/proj1 a.wav", "a.wav"),
-                                   call().__enter__().write("/tmp/x/b.wav", "b.wav"),
-                                   call().__enter__().write("/tmp/x/proj1 c.wav", "c.wav"),
-                                   call().__exit__(None, None, None)])
+        zip_mock.assert_has_calls(_create_zip_mock_calls("proj1", "/tmp/x", {
+            "/tmp/x/proj1 a.wav": "a.wav",
+            "/tmp/x/b.wav": "b.wav",
+            "/tmp/x/proj1 c.wav": "c.wav"
+        }))
 
 
 def _create_walk_files(files):
     return iter([('proj_dir', [], files)])
+
+
+def _create_zip_mock_calls(proj_name, proj_dir, files):
+    call_list = [call(os.path.join(proj_dir, "{}.zip".format(proj_name)), "w"),
+                 call().__enter__()]
+
+    for name, entry in files.items():
+        call_list.append(call().__enter__().write(os.path.join(proj_dir, name), entry))
+    call_list.append(call().__exit__(None, None, None))
+
+    return call_list
