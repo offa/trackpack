@@ -75,7 +75,17 @@ class TestTrackPack(unittest.TestCase):
         trackpack.pack_files("/tmp/projdir", "projname", ["a.wav", "b.wav", "c.wav"])
         zip_mock.assert_has_calls([call("/tmp/projdir/projname.zip", "w"),
                                    call().__enter__(),
-                                   call().__enter__().write("a.wav"),
-                                   call().__enter__().write("b.wav"),
-                                   call().__enter__().write("c.wav"),
+                                   call().__enter__().write("/tmp/projdir/a.wav", "a.wav"),
+                                   call().__enter__().write("/tmp/projdir/b.wav", "b.wav"),
+                                   call().__enter__().write("/tmp/projdir/c.wav", "c.wav"),
+                                   call().__exit__(None, None, None)])
+
+    @patch("trackpack.ZipFile", autospec=True)
+    def test_pack_files_removes_project_name_from_stems(self, zip_mock):
+        trackpack.pack_files("/tmp/x", "proj1", ["proj1 a.wav", "b.wav", "proj1 c.wav"])
+        zip_mock.assert_has_calls([call("/tmp/x/proj1.zip", "w"),
+                                   call().__enter__(),
+                                   call().__enter__().write("/tmp/x/proj1 a.wav", "a.wav"),
+                                   call().__enter__().write("/tmp/x/b.wav", "b.wav"),
+                                   call().__enter__().write("/tmp/x/proj1 c.wav", "c.wav"),
                                    call().__exit__(None, None, None)])

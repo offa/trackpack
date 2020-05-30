@@ -40,8 +40,12 @@ def find_audiofiles(project_name, project_path):
 def pack_files(project_dir, project_name, files):
     with ZipFile("{}.zip".format(os.path.join(project_dir, project_name)), "w") as archive:
         for file in files:
-            archive.write(file)
+            archive.write(os.path.join(project_dir, file), __normalize_stem_name(project_name, file))
 
+def __normalize_stem_name(project_name, stem_name):
+    if stem_name.startswith(project_name):
+        return stem_name[len(project_name):].strip()
+    return stem_name
 
 if __name__ == '__main__':
     pass
