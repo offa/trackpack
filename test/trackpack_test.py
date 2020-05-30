@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, call
 import trackpack
 
 
@@ -69,3 +69,13 @@ class TestTrackPack(unittest.TestCase):
 
         with self.assertRaises(trackpack.MissingFileException):
             trackpack.find_audiofiles("proj", "/tmp/export")
+
+    @patch("trackpack.ZipFile", autospec=True)
+    def test_pack_files_creates_archive_of_stems(self, zip_mock):
+        trackpack.pack_files("/tmp/projdir", "projname", ["a.wav", "b.wav", "c.wav"])
+        zip_mock.assert_has_calls([call("/tmp/projdir/projname.zip", "w"),
+                                   call().__enter__(),
+                                   call().__enter__().write("a.wav"),
+                                   call().__enter__().write("b.wav"),
+                                   call().__enter__().write("c.wav"),
+                                   call().__exit__(None, None, None)])

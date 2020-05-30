@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-
+from zipfile import ZipFile
 
 class MissingFileException(Exception):
     pass
@@ -35,6 +35,12 @@ def find_audiofiles(project_name, project_path):
         raise MissingFileException("No stems found")
 
     return (master, filenames)
+
+
+def pack_files(project_dir, project_name, files):
+    with ZipFile("{}.zip".format(os.path.join(project_dir, project_name)), "w") as archive:
+        for file in files:
+            archive.write(file)
 
 
 if __name__ == '__main__':
