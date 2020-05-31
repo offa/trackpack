@@ -67,6 +67,7 @@ class TestTrackPack(unittest.TestCase):
             trackpacker.find_audiofiles("proj", "/tmp/export")
 
     @patch("trackpack.trackpacker.ZipFile", autospec=True)
+    # pylint: disable=R0201
     def test_pack_files_creates_archive_of_stems(self, zip_mock):
         trackpacker.pack_files("/tmp/projdir", "projname", ["a.wav", "b.wav", "c.wav"])
         zip_mock.assert_has_calls(_create_zip_mock_calls("projname", "/tmp/projdir", {
@@ -76,6 +77,7 @@ class TestTrackPack(unittest.TestCase):
         }))
 
     @patch("trackpack.trackpacker.ZipFile", autospec=True)
+    # pylint: disable=R0201
     def test_pack_files_removes_project_name_from_stems(self, zip_mock):
         trackpacker.pack_files("/tmp/x", "proj1", ["proj1 a.wav", "b.wav", "proj1 c.wav"])
         zip_mock.assert_has_calls(_create_zip_mock_calls("proj1", "/tmp/x", {
