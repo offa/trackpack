@@ -79,9 +79,9 @@ class TestTrackPack(unittest.TestCase):
     def test_pack_files_removes_project_name_from_stems(self, zip_mock):
         trackpack.pack_files("/tmp/x", "proj1", ["proj1 a.wav", "b.wav", "proj1 c.wav"])
         zip_mock.assert_has_calls(_create_zip_mock_calls("proj1", "/tmp/x", {
-            "/tmp/x/proj1 a.wav": "a.wav",
-            "/tmp/x/b.wav": "b.wav",
-            "/tmp/x/proj1 c.wav": "c.wav"
+            "proj1 a.wav": "a.wav",
+            "b.wav": "b.wav",
+            "proj1 c.wav": "c.wav"
         }))
 
 
