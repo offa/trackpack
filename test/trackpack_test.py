@@ -18,7 +18,7 @@
 import unittest
 from unittest.mock import patch, call
 import os
-import trackpack
+from trackpack import trackpacker
 
 
 class TestTrackPack(unittest.TestCase):
@@ -29,7 +29,7 @@ class TestTrackPack(unittest.TestCase):
                                                      'proj stem1.wav', 'proj.wav',
                                                      'proj stem3.wav'])
 
-        (master, stems) = trackpack.find_audiofiles("proj", "/tmp/export")
+        (master, stems) = trackpacker.find_audiofiles("proj", "/tmp/export")
         walk_mock.assert_called_with('/tmp/export')
         self.assertEqual('proj.wav', master)
         self.assertListEqual(['proj stem2.wav', 'proj stem4.wav',
@@ -41,7 +41,7 @@ class TestTrackPack(unittest.TestCase):
                                                      'proj stem1.wav', 'proj.wav', 'archive.zip',
                                                      "proj unrelated.mp3"])
 
-        (_, stems) = trackpack.find_audiofiles("proj", "/tmp/export")
+        (_, stems) = trackpacker.find_audiofiles("proj", "/tmp/export")
         self.assertListEqual(['proj stem2.wav', 'proj stem1.wav'], stems)
 
     @patch("os.walk")
@@ -49,35 +49,35 @@ class TestTrackPack(unittest.TestCase):
         walk_mock.return_value = _create_walk_files(['example.wav', 'proj stem4.wav',
                                                      'proj stem1.wav', 'proj.wav',
                                                      'proj stem3.wav'])
-        (master, _) = trackpack.find_audiofiles("example", "/tmp/export")
+        (master, _) = trackpacker.find_audiofiles("example", "/tmp/export")
         self.assertEqual('example.wav', master)
 
     @patch("os.walk")
     def test_find_audiofiles_fails_if_no_master(self, walk_mock):
         walk_mock.return_value = _create_walk_files(['proj stem1.wav', 'proj stem2.wav'])
 
-        with self.assertRaises(trackpack.MissingFileException):
-            trackpack.find_audiofiles("proj", "/tmp/export")
+        with self.assertRaises(trackpacker.MissingFileException):
+            trackpacker.find_audiofiles("proj", "/tmp/export")
 
     @patch("os.walk")
     def test_find_audiofiles_fails_if_no_stems(self, walk_mock):
         walk_mock.return_value = _create_walk_files(["proj.wav"])
 
-        with self.assertRaises(trackpack.MissingFileException):
-            trackpack.find_audiofiles("proj", "/tmp/export")
+        with self.assertRaises(trackpacker.MissingFileException):
+            trackpacker.find_audiofiles("proj", "/tmp/export")
 
-    @patch("trackpack.ZipFile", autospec=True)
+    @patch("trackpack.trackpacker.ZipFile", autospec=True)
     def test_pack_files_creates_archive_of_stems(self, zip_mock):
-        trackpack.pack_files("/tmp/projdir", "projname", ["a.wav", "b.wav", "c.wav"])
+        trackpacker.pack_files("/tmp/projdir", "projname", ["a.wav", "b.wav", "c.wav"])
         zip_mock.assert_has_calls(_create_zip_mock_calls("projname", "/tmp/projdir", {
             "a.wav": "a.wav",
             "b.wav": "b.wav",
             "c.wav": "c.wav"
         }))
 
-    @patch("trackpack.ZipFile", autospec=True)
+    @patch("trackpack.trackpacker.ZipFile", autospec=True)
     def test_pack_files_removes_project_name_from_stems(self, zip_mock):
-        trackpack.pack_files("/tmp/x", "proj1", ["proj1 a.wav", "b.wav", "proj1 c.wav"])
+        trackpacker.pack_files("/tmp/x", "proj1", ["proj1 a.wav", "b.wav", "proj1 c.wav"])
         zip_mock.assert_has_calls(_create_zip_mock_calls("proj1", "/tmp/x", {
             "proj1 a.wav": "a.wav",
             "b.wav": "b.wav",
