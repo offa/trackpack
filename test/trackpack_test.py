@@ -69,8 +69,8 @@ class TestTrackPack(unittest.TestCase):
     @patch("trackpack.trackpacker.ZipFile", autospec=True)
     # pylint: disable=R0201
     def test_pack_files_creates_archive_of_stems(self, zip_mock):
-        trackpacker.pack_files("/tmp/projdir", "projname", ["a.wav", "b.wav", "c.wav"])
-        zip_mock.assert_has_calls(_create_zip_mock_calls("projname", "/tmp/projdir", {
+        trackpacker.pack_files("/tmp/proj/Exports", "projname", ["a.wav", "b.wav", "c.wav"])
+        zip_mock.assert_has_calls(_create_zip_mock_calls("projname", "/tmp/proj/Exports", {
             "a.wav": "a.wav",
             "b.wav": "b.wav",
             "c.wav": "c.wav"
@@ -88,15 +88,15 @@ class TestTrackPack(unittest.TestCase):
 
 
 def _create_walk_files(files):
-    return iter([('proj_dir', [], files)])
+    return iter([('proj_export_dir', [], files)])
 
 
-def _create_zip_mock_calls(proj_name, proj_dir, files):
-    call_list = [call(os.path.join(proj_dir, "{}.zip".format(proj_name)), "w"),
+def _create_zip_mock_calls(proj_name, proj_export_dir, files):
+    call_list = [call(os.path.join(proj_export_dir, "{}.zip".format(proj_name)), "w"),
                  call().__enter__()]
 
     for name, entry in files.items():
-        call_list.append(call().__enter__().write(os.path.join(proj_dir, name), entry))
+        call_list.append(call().__enter__().write(os.path.join(proj_export_dir, name), entry))
     call_list.append(call().__exit__(None, None, None))
 
     return call_list

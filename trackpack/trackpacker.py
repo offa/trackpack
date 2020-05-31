@@ -39,10 +39,10 @@ def find_audiofiles(project_name, project_path):
     return (master, filenames)
 
 
-def pack_files(project_dir, project_name, files):
-    with ZipFile("{}.zip".format(os.path.join(project_dir, project_name)), "w") as archive:
+def pack_files(project_export_dir, project_name, files):
+    with ZipFile("{}.zip".format(os.path.join(project_export_dir, project_name)), "w") as archive:
         for file in files:
-            archive.write(os.path.join(project_dir, file),
+            archive.write(os.path.join(project_export_dir, file),
                           __normalize_stem_name(project_name, file))
 
 
