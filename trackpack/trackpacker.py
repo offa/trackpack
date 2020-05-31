@@ -39,8 +39,8 @@ def find_audiofiles(project_name, project_path):
     return (master, filenames)
 
 
-def pack_files(project_export_dir, project_name, files):
-    with ZipFile("{}.zip".format(os.path.join(project_export_dir, project_name)), "w") as archive:
+def pack_files(project_export_dir, project_name, archive_name, files):
+    with ZipFile("{}.zip".format(os.path.join(project_export_dir, archive_name)), "w") as archive:
         for file in files:
             archive.write(os.path.join(project_export_dir, file),
                           __normalize_stem_name(project_name, file))
@@ -61,9 +61,10 @@ def main():
     config = __read_config("pack.yml")
     export_dir = "Exports"
     project_name = config["name"]
+    archive_name = config.get("archive", project_name)
 
     (_, stems) = find_audiofiles(project_name, export_dir)
-    pack_files(export_dir, project_name, stems)
+    pack_files(export_dir, project_name, archive_name, stems)
 
 
 if __name__ == '__main__':

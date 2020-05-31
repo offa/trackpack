@@ -69,8 +69,9 @@ class TestTrackPack(unittest.TestCase):
     @patch("trackpack.trackpacker.ZipFile", autospec=True)
     # pylint: disable=R0201
     def test_pack_files_creates_archive_of_stems(self, zip_mock):
-        trackpacker.pack_files("/tmp/proj/Exports", "projname", ["a.wav", "b.wav", "c.wav"])
-        zip_mock.assert_has_calls(_create_zip_mock_calls("projname", "/tmp/proj/Exports", {
+        trackpacker.pack_files("/tmp/proj/Exports", "projname",
+                               "archivename", ["a.wav", "b.wav", "c.wav"])
+        zip_mock.assert_has_calls(_create_zip_mock_calls("archivename", "/tmp/proj/Exports", {
             "a.wav": "a.wav",
             "b.wav": "b.wav",
             "c.wav": "c.wav"
@@ -79,8 +80,9 @@ class TestTrackPack(unittest.TestCase):
     @patch("trackpack.trackpacker.ZipFile", autospec=True)
     # pylint: disable=R0201
     def test_pack_files_removes_project_name_from_stems(self, zip_mock):
-        trackpacker.pack_files("/tmp/x", "proj1", ["proj1 a.wav", "b.wav", "proj1 c.wav"])
-        zip_mock.assert_has_calls(_create_zip_mock_calls("proj1", "/tmp/x", {
+        trackpacker.pack_files("/tmp/x", "proj1", "archive1",
+                               ["proj1 a.wav", "b.wav", "proj1 c.wav"])
+        zip_mock.assert_has_calls(_create_zip_mock_calls("archive1", "/tmp/x", {
             "proj1 a.wav": "a.wav",
             "b.wav": "b.wav",
             "proj1 c.wav": "c.wav"
@@ -91,8 +93,8 @@ def _create_walk_files(files):
     return iter([('proj_export_dir', [], files)])
 
 
-def _create_zip_mock_calls(proj_name, proj_export_dir, files):
-    call_list = [call(os.path.join(proj_export_dir, "{}.zip".format(proj_name)), "w"),
+def _create_zip_mock_calls(archive_name, proj_export_dir, files):
+    call_list = [call(os.path.join(proj_export_dir, "{}.zip".format(archive_name)), "w"),
                  call().__enter__()]
 
     for name, entry in files.items():
