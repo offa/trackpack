@@ -8,3 +8,4 @@ python:
 
 script:
   - python -m pytest
+  - pylint trackpack test
