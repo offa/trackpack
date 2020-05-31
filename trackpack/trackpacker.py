@@ -54,7 +54,7 @@ def __normalize_stem_name(project_name, stem_name):
 
 def __read_config(filename):
     with open(filename, "r") as config_file:
-        return yaml.load(config_file, Loader=yaml.FullLoader)
+        return yaml.safe_load(config_file)
 
 
 def main():
