@@ -24,7 +24,7 @@ class MissingFileException(Exception):
     pass
 
 
-def find_audiofiles(project_name, project_path):
+def discover_audiofiles(project_name, project_path):
     (_, _, filenames) = next(os.walk(project_path))
     master = "{}.wav".format(project_name)
     filenames = list(filter(lambda f: f.endswith(".wav"), filenames))
@@ -63,7 +63,7 @@ def main():
     project_name = config["name"]
     archive_name = config.get("archive", project_name)
 
-    (_, stems) = find_audiofiles(project_name, export_dir)
+    (_, stems) = discover_audiofiles(project_name, export_dir)
     pack_files(export_dir, project_name, archive_name, stems)
 
 
