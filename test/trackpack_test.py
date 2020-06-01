@@ -88,6 +88,17 @@ class TestTrackPack(unittest.TestCase):
             "proj1 c.wav": "c.wav"
         }))
 
+    @patch("trackpack.trackpacker.ZipFile", autospec=True)
+    # pylint: disable=R0201
+    def test_pack_files_replaces_blanks_in_names(self, zip_mock):
+        trackpacker.pack_files("/tmp/x", "proj1", "archive1",
+                               ["proj1 a a a.wav", "b 123.wav", "proj1   c d efg.wav"])
+        zip_mock.assert_has_calls(_create_zip_mock_calls("archive1", "/tmp/x", {
+            "proj1 a a a.wav": "a-a-a.wav",
+            "b 123.wav": "b-123.wav",
+            "proj1   c d efg.wav": "c-d-efg.wav"
+        }))
+
 
 def _create_walk_files(files):
     return iter([('proj_export_dir', [], files)])

@@ -48,8 +48,8 @@ def pack_files(project_export_dir, project_name, archive_name, files):
 
 def __normalize_stem_name(project_name, stem_name):
     if stem_name.startswith(project_name):
-        return stem_name[len(project_name):].strip()
-    return stem_name
+        stem_name = stem_name[len(project_name):]
+    return stem_name.strip().replace(" ", "-")
 
 
 def __read_config(filename):
