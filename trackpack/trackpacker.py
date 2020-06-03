@@ -17,7 +17,6 @@
 
 import os
 from zipfile import ZipFile
-import yaml
 
 
 class MissingFileException(Exception):
@@ -50,22 +49,3 @@ def __normalize_stem_name(project_name, stem_name):
     if stem_name.startswith(project_name):
         stem_name = stem_name[len(project_name):]
     return stem_name.strip().replace(" ", "-")
-
-
-def __read_config(filename):
-    with open(filename, "r") as config_file:
-        return yaml.safe_load(config_file)
-
-
-def main():
-    config = __read_config("pack.yml")
-    export_dir = "Exports"
-    project_name = config["name"]
-    archive_name = config.get("archive", project_name)
-
-    (_, stems) = discover_audiofiles(project_name, export_dir)
-    pack_files(export_dir, project_name, archive_name, stems)
-
-
-if __name__ == '__main__':
-    main()
