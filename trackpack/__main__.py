@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import yaml
-from . import trackpacker
+from trackpack import trackpacker
 
 def __read_config(filename):
     with open(filename, "r") as config_file:
