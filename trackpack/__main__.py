@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from datetime import date
 import yaml
 from trackpack import trackpacker
 
@@ -28,6 +29,9 @@ def main():
     export_dir = "Exports"
     project_name = config["name"]
     archive_name = config.get("archive", project_name)
+
+    if config.get("append_date", False):
+        archive_name = "-".join((archive_name, date.today().strftime('%Y-%m-%d')))
 
     (_, stems) = trackpacker.discover_audiofiles(project_name, export_dir)
     trackpacker.pack_files(export_dir, project_name, archive_name, stems)
