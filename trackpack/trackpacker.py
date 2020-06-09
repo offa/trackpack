@@ -23,7 +23,7 @@ class MissingFileException(Exception):
     pass
 
 
-def discover_audiofiles(project_name, project_path):
+def discover_audiofiles(project_name, project_path, explicit_files=None):
     (_, _, filenames) = next(os.walk(project_path))
     master = "{}.wav".format(project_name)
     filenames = list(filter(lambda f: f.endswith(".wav"), filenames))
@@ -31,6 +31,9 @@ def discover_audiofiles(project_name, project_path):
     if master not in filenames:
         raise MissingFileException("Master track not found")
     filenames.remove(master)
+
+    if explicit_files:
+        filenames = explicit_files
 
     if not filenames:
         raise MissingFileException("No stems found")

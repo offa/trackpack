@@ -66,6 +66,18 @@ class TestTrackPack(unittest.TestCase):
         with self.assertRaises(trackpacker.MissingFileException):
             trackpacker.discover_audiofiles("proj", "/tmp/export")
 
+    @patch("os.walk")
+    def test_discover_audiofiles_returns_explicit_passed_audio_files(self, walk_mock):
+        walk_mock.return_value = _create_walk_files(['proj stem2.wav', 'proj stem4.wav',
+                                                     'proj stem1.wav', 'proj.wav',
+                                                     'proj stem3.wav'])
+
+        (master, stems) = trackpacker.discover_audiofiles("proj", "/tmp/export",
+                                                          ["proj stem1.wav", "proj stem3.wav"])
+        walk_mock.assert_called_with('/tmp/export')
+        self.assertEqual('proj.wav', master)
+        self.assertListEqual(['proj stem1.wav', 'proj stem3.wav'], stems)
+
     @patch("trackpack.trackpacker.ZipFile", autospec=True)
     # pylint: disable=R0201
     def test_pack_files_creates_archive_of_stems(self, zip_mock):

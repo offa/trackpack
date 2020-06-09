@@ -15,9 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 from datetime import date
 import yaml
+from trackpack import cli
 from trackpack import trackpacker
+
 
 def __read_config(filename):
     with open(filename, "r") as config_file:
@@ -25,16 +28,20 @@ def __read_config(filename):
 
 
 def main():
-    config = __read_config("pack.yml")
-    export_dir = "Exports"
-    project_name = config["name"]
-    archive_name = config.get("archive", project_name)
+    args = cli.parse_args(sys.argv[1:])
 
-    if config.get("append_date", False):
-        archive_name = "-".join((archive_name, date.today().strftime('%Y-%m-%d')))
+    if args.command == 'pack':
+        config = __read_config("pack.yml")
+        export_dir = "Exports"
+        project_name = config["name"]
+        archive_name = config.get("archive", project_name)
 
-    (_, stems) = trackpacker.discover_audiofiles(project_name, export_dir)
-    trackpacker.pack_files(export_dir, project_name, archive_name, stems)
+        if config.get("append_date", False):
+            archive_name = "-".join((archive_name, date.today().strftime('%Y-%m-%d')))
+
+        (_, stems) = trackpacker.discover_audiofiles(project_name, export_dir,
+                                                     args.pack_explicit_files)
+        trackpacker.pack_files(export_dir, project_name, archive_name, stems)
 
 
 if __name__ == '__main__':
