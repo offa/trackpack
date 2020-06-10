@@ -32,8 +32,8 @@ class TestTrackPack(unittest.TestCase):
         (master, stems) = trackpacker.discover_audiofiles("proj", "/tmp/export")
         walk_mock.assert_called_with('/tmp/export')
         self.assertEqual('proj.wav', master)
-        self.assertListEqual(['proj stem2.wav', 'proj stem4.wav',
-                              'proj stem1.wav', 'proj stem3.wav'], stems)
+        self.assertListEqual(['/tmp/export/proj stem2.wav', '/tmp/export/proj stem4.wav',
+                              '/tmp/export/proj stem1.wav', '/tmp/export/proj stem3.wav'], stems)
 
     @patch("os.walk")
     def test_discover_audiofiles_returns_only_related_audio_files(self, walk_mock):
@@ -42,7 +42,7 @@ class TestTrackPack(unittest.TestCase):
                                                      "proj unrelated.mp3"])
 
         (_, stems) = trackpacker.discover_audiofiles("proj", "/tmp/export")
-        self.assertListEqual(['proj stem2.wav', 'proj stem1.wav'], stems)
+        self.assertListEqual(['/tmp/export/proj stem2.wav', '/tmp/export/proj stem1.wav'], stems)
 
     @patch("os.walk")
     def test_discover_audiofiles_master_track_matches_project_name(self, walk_mock):
@@ -73,10 +73,11 @@ class TestTrackPack(unittest.TestCase):
                                                      'proj stem3.wav'])
 
         (master, stems) = trackpacker.discover_audiofiles("proj", "/tmp/export",
-                                                          ["proj stem1.wav", "proj stem3.wav"])
+                                                          ["/tmp/x/proj stem1.wav",
+                                                           "/tmp/x/proj stem3.wav"])
         walk_mock.assert_called_with('/tmp/export')
         self.assertEqual('proj.wav', master)
-        self.assertListEqual(['proj stem1.wav', 'proj stem3.wav'], stems)
+        self.assertListEqual(['/tmp/x/proj stem1.wav', '/tmp/x/proj stem3.wav'], stems)
 
     @patch("trackpack.trackpacker.ZipFile", autospec=True)
     # pylint: disable=R0201

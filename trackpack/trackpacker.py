@@ -38,7 +38,7 @@ def discover_audiofiles(project_name, project_path, explicit_files=None):
     if not filenames:
         raise MissingFileException("No stems found")
 
-    return (master, filenames)
+    return (master, [os.path.abspath(os.path.join(project_path, file)) for file in filenames])
 
 
 def pack_files(project_export_dir, project_name, archive_name, files):
