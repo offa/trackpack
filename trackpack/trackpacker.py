@@ -33,7 +33,9 @@ def discover_audiofiles(project_name, project_path, explicit_files=None):
     filenames.remove(master)
 
     if explicit_files:
-        filenames = explicit_files
+        filenames = [os.path.abspath(file) for file in explicit_files]
+    else:
+        filenames = [os.path.abspath(os.path.join(project_path, file)) for file in filenames]
 
     if not filenames:
         raise MissingFileException("No stems found")
