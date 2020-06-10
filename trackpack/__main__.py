@@ -37,10 +37,10 @@ def main():
         archive_name = config.get("archive", project_name)
 
         if args.archive_name:
-            if not args.archive_name.endswith(".zip"):
-                archive_name = args.archive_name
-            else:
-                archive_name = args.archive_name[:-4]
+            archive_name = args.archive_name
+
+        if args.archive_name.endswith(".zip"):
+            archive_name = args.archive_name[:-4]
 
         if config.get("append_date", False):
             archive_name = "-".join((archive_name, date.today().strftime('%Y-%m-%d')))
