@@ -83,7 +83,7 @@ class TestTrackPack(unittest.TestCase):
     # pylint: disable=R0201
     def test_pack_files_creates_archive_of_stems(self, zip_mock):
         trackpacker.pack_files("/tmp/proj/Exports", "projname",
-                               "archivename", ["a.wav", "b.wav", "c.wav"])
+                               "archivename", ["/tmp/proj/Exports/a.wav", "/tmp/proj/Exports/b.wav", "/tmp/proj/Exports/c.wav"])
         zip_mock.assert_has_calls(_create_zip_mock_calls("archivename", "/tmp/proj/Exports", {
             "a.wav": "a.wav",
             "b.wav": "b.wav",
@@ -94,7 +94,7 @@ class TestTrackPack(unittest.TestCase):
     # pylint: disable=R0201
     def test_pack_files_removes_project_name_from_stems(self, zip_mock):
         trackpacker.pack_files("/tmp/x", "proj1", "archive1",
-                               ["proj1 a.wav", "b.wav", "proj1 c.wav"])
+                               ["/tmp/x/proj1 a.wav", "/tmp/x/b.wav", "/tmp/x/proj1 c.wav"])
         zip_mock.assert_has_calls(_create_zip_mock_calls("archive1", "/tmp/x", {
             "proj1 a.wav": "a.wav",
             "b.wav": "b.wav",
@@ -103,9 +103,9 @@ class TestTrackPack(unittest.TestCase):
 
     @patch("trackpack.trackpacker.ZipFile", autospec=True)
     # pylint: disable=R0201
-    def test_pack_files_replaces_blanks_in_names(self, zip_mock):
+    def test_pack_files_replaces_blanks_in_names(self, zip_mock): #TODO check with blanks in path
         trackpacker.pack_files("/tmp/x", "proj1", "archive1",
-                               ["proj1 a a a.wav", "b 123.wav", "proj1   c d efg.wav"])
+                               ["/tmp/x/proj1 a a a.wav", "/tmp/x/b 123.wav", "/tmp/x/proj1   c d efg.wav"])
         zip_mock.assert_has_calls(_create_zip_mock_calls("archive1", "/tmp/x", {
             "proj1 a a a.wav": "a-a-a.wav",
             "b 123.wav": "b-123.wav",

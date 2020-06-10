@@ -44,8 +44,7 @@ def discover_audiofiles(project_name, project_path, explicit_files=None):
 def pack_files(project_export_dir, project_name, archive_name, files):
     with ZipFile("{}.zip".format(os.path.join(project_export_dir, archive_name)), "w") as archive:
         for file in files:
-            archive.write(os.path.join(project_export_dir, file),
-                          __normalize_stem_name(project_name, file))
+            archive.write(file, __normalize_stem_name(project_name, os.path.basename(file)))
 
 
 def __normalize_stem_name(project_name, stem_name):
