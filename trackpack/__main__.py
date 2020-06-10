@@ -36,6 +36,9 @@ def main():
         project_name = config["name"]
         archive_name = config.get("archive", project_name)
 
+        if args.archive_name:
+            archive_name = args.archive_name
+
         if config.get("append_date", False):
             archive_name = "-".join((archive_name, date.today().strftime('%Y-%m-%d')))
 

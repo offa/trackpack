@@ -22,5 +22,6 @@ def parse_args(args):
     subparsers = parser.add_subparsers(dest="command")
     pack_parser = subparsers.add_parser("pack", help="Pack audio files")
     pack_parser.add_argument("pack_explicit_files", metavar="file", nargs="*", help="Files to pack")
+    pack_parser.add_argument("--name", dest="archive_name", type=str, help="Archive name")
 
     return parser.parse_args(args=args if args else ['--help'])

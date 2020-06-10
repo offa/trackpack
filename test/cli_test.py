@@ -34,3 +34,8 @@ class TestCli(unittest.TestCase):
         args = cli.parse_args(['pack', 'f0.wav', 'f1.wav'])
         self.assertEqual("pack", args.command)
         self.assertEqual(['f0.wav', 'f1.wav'], args.pack_explicit_files)
+
+    def test_pack_with_custom_archive_name(self):
+        args = cli.parse_args(['pack', "--name", "xyz"])
+        self.assertEqual("pack", args.command)
+        self.assertEqual("xyz", args.archive_name)
