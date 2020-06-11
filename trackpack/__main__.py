@@ -39,7 +39,7 @@ def main():
         if args.archive_name:
             archive_name = args.archive_name
 
-        if args.archive_name.endswith(".zip"):
+        if archive_name.endswith(".zip"):
             archive_name = args.archive_name[:-4]
 
         if config.get("append_date", False):
