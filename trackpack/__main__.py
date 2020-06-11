@@ -42,7 +42,7 @@ def main():
         if archive_name.endswith(".zip"):
             archive_name = args.archive_name[:-4]
 
-        if config.get("append_date", False):
+        if args.append_date or config.get("append_date", False):
             archive_name = "-".join((archive_name, date.today().strftime('%Y-%m-%d')))
 
         (_, stems) = trackpacker.discover_audiofiles(project_name, export_dir,
