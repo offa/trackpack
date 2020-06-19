@@ -47,10 +47,10 @@ class TrackPacker:
         return (master, [os.path.abspath(file) for file in filenames])
 
     def pack_files(self, project_export_dir, archive_name, files):
-        with ZipFile("{}.zip".format(os.path.join(project_export_dir, archive_name)), "w") as archive:
+        with ZipFile("{}.zip".format(os.path.join(project_export_dir,
+                                                  archive_name)), "w") as archive:
             for file in files:
                 archive.write(file, self.__normalize_stem_name(os.path.basename(file)))
-
 
     def __normalize_stem_name(self, stem_name):
         if stem_name.startswith(self.__project_name):
