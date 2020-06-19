@@ -45,9 +45,9 @@ def main():
         if args.append_date or config.get("append_date", False):
             archive_name = "-".join((archive_name, date.today().strftime('%Y-%m-%d')))
 
-        trackpacker = TrackPacker(project_name)
-        (_, stems) = trackpacker.discover_audiofiles(export_dir, args.pack_explicit_files)
-        trackpacker.pack_files(export_dir, archive_name, stems)
+        trackpacker = TrackPacker(project_name, export_dir)
+        (_, stems) = trackpacker.discover_audiofiles(args.pack_explicit_files)
+        trackpacker.pack_files(archive_name, stems)
 
 
 if __name__ == '__main__':

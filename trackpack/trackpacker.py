@@ -24,11 +24,12 @@ class MissingFileException(Exception):
 
 
 class TrackPacker:
-    def __init__(self, project_name):
+    def __init__(self, project_name, export_dir):
         self.__project_name = project_name
+        self.__export_dir = export_dir
 
-    def discover_audiofiles(self, project_path, explicit_files=None):
-        (_, _, filenames) = next(os.walk(project_path))
+    def discover_audiofiles(self, explicit_files=None):
+        (_, _, filenames) = next(os.walk(self.__export_dir))
         master = "{}.wav".format(self.__project_name)
         filenames = list(filter(lambda f: f.endswith(".wav"), filenames))
 
@@ -39,15 +40,16 @@ class TrackPacker:
         if explicit_files:
             filenames = [os.path.abspath(file) for file in explicit_files]
         else:
-            filenames = [os.path.abspath(os.path.join(project_path, file)) for file in filenames]
+            filenames = [os.path.abspath(os.path.join(self.__export_dir,
+                                                      file)) for file in filenames]
 
         if not filenames:
             raise MissingFileException("No stems found")
 
         return (master, [os.path.abspath(file) for file in filenames])
 
-    def pack_files(self, project_export_dir, archive_name, files):
-        with ZipFile("{}.zip".format(os.path.join(project_export_dir,
+    def pack_files(self, archive_name, files):
+        with ZipFile("{}.zip".format(os.path.join(self.__export_dir,
                                                   archive_name)), "w") as archive:
             for file in files:
                 archive.write(file, self.__normalize_stem_name(os.path.basename(file)))
