@@ -22,11 +22,14 @@ from zipfile import ZipFile
 class MissingFileException(Exception):
     pass
 
-class TrackPacker:
 
-    def discover_audiofiles(self, project_name, project_path, explicit_files=None):
+class TrackPacker:
+    def __init__(self, project_name):
+        self.__project_name = project_name
+
+    def discover_audiofiles(self, project_path, explicit_files=None):
         (_, _, filenames) = next(os.walk(project_path))
-        master = "{}.wav".format(project_name)
+        master = "{}.wav".format(self.__project_name)
         filenames = list(filter(lambda f: f.endswith(".wav"), filenames))
 
         if master not in filenames:
@@ -43,11 +46,11 @@ class TrackPacker:
 
         return (master, [os.path.abspath(file) for file in filenames])
 
-
-    def pack_files(self, project_export_dir, project_name, archive_name, files):
+    def pack_files(self, project_export_dir, archive_name, files):
         with ZipFile("{}.zip".format(os.path.join(project_export_dir, archive_name)), "w") as archive:
             for file in files:
-                archive.write(file, _normalize_stem_name(project_name, os.path.basename(file)))
+                archive.write(file, _normalize_stem_name(
+                    self.__project_name, os.path.basename(file)))
 
 
 def _normalize_stem_name(project_name, stem_name):
