@@ -22,34 +22,35 @@ from zipfile import ZipFile
 class MissingFileException(Exception):
     pass
 
+class TrackPacker:
 
-def discover_audiofiles(project_name, project_path, explicit_files=None):
-    (_, _, filenames) = next(os.walk(project_path))
-    master = "{}.wav".format(project_name)
-    filenames = list(filter(lambda f: f.endswith(".wav"), filenames))
+    def discover_audiofiles(self, project_name, project_path, explicit_files=None):
+        (_, _, filenames) = next(os.walk(project_path))
+        master = "{}.wav".format(project_name)
+        filenames = list(filter(lambda f: f.endswith(".wav"), filenames))
 
-    if master not in filenames:
-        raise MissingFileException("Master track not found")
-    filenames.remove(master)
+        if master not in filenames:
+            raise MissingFileException("Master track not found")
+        filenames.remove(master)
 
-    if explicit_files:
-        filenames = [os.path.abspath(file) for file in explicit_files]
-    else:
-        filenames = [os.path.abspath(os.path.join(project_path, file)) for file in filenames]
+        if explicit_files:
+            filenames = [os.path.abspath(file) for file in explicit_files]
+        else:
+            filenames = [os.path.abspath(os.path.join(project_path, file)) for file in filenames]
 
-    if not filenames:
-        raise MissingFileException("No stems found")
+        if not filenames:
+            raise MissingFileException("No stems found")
 
-    return (master, [os.path.abspath(file) for file in filenames])
-
-
-def pack_files(project_export_dir, project_name, archive_name, files):
-    with ZipFile("{}.zip".format(os.path.join(project_export_dir, archive_name)), "w") as archive:
-        for file in files:
-            archive.write(file, __normalize_stem_name(project_name, os.path.basename(file)))
+        return (master, [os.path.abspath(file) for file in filenames])
 
 
-def __normalize_stem_name(project_name, stem_name):
+    def pack_files(self, project_export_dir, project_name, archive_name, files):
+        with ZipFile("{}.zip".format(os.path.join(project_export_dir, archive_name)), "w") as archive:
+            for file in files:
+                archive.write(file, _normalize_stem_name(project_name, os.path.basename(file)))
+
+
+def _normalize_stem_name(project_name, stem_name):
     if stem_name.startswith(project_name):
         stem_name = stem_name[len(project_name):]
     return stem_name.strip().replace(" ", "-")
