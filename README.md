@@ -1,5 +1,6 @@
 # Track Pack
 
+[![CI](https://github.com/offa/trackpack/workflows/ci/badge.svg)](https://github.com/offa/trackpack/actions)
 [![Build Status](https://travis-ci.com/offa/trackpack.svg?branch=master)](https://travis-ci.com/offa/trackpack)
 [![GitHub release](https://img.shields.io/github/release/offa/trackpack.svg)](https://github.com/offa/trackpack/releases)
 [![License](https://img.shields.io/badge/license-GPLv3-yellow.svg)](LICENSE)
