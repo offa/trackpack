@@ -19,7 +19,7 @@ import sys
 from datetime import date
 import yaml
 from trackpack import cli
-from trackpack import trackpacker
+from trackpack.trackpacker import TrackPacker
 
 
 def __read_config(filename):
@@ -45,9 +45,9 @@ def main():
         if args.append_date or config.get("append_date", False):
             archive_name = "-".join((archive_name, date.today().strftime('%Y-%m-%d')))
 
-        (_, stems) = trackpacker.discover_audiofiles(project_name, export_dir,
-                                                     args.pack_explicit_files)
-        trackpacker.pack_files(export_dir, project_name, archive_name, stems)
+        trackpacker = TrackPacker(project_name)
+        (_, stems) = trackpacker.discover_audiofiles(export_dir, args.pack_explicit_files)
+        trackpacker.pack_files(export_dir, archive_name, stems)
 
 
 if __name__ == '__main__':
