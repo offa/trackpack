@@ -90,10 +90,10 @@ class TestTrackPack(unittest.TestCase):
     @patch("trackpack.trackpacker.ZipFile", autospec=True)
     # pylint: disable=R0201
     def test_pack_files_creates_archive_of_stems(self, zip_mock):
-        trackpacker = TrackPacker("projname", "/tmp/proj/Exports")
-        trackpacker.pack_files("archivename", _files_in_dir("/tmp/proj/Exports",
+        trackpacker = TrackPacker("projname", "/tmp/proj/Export")
+        trackpacker.pack_files("archivename", _files_in_dir("/tmp/proj/Export",
                                                             ["a.wav", "b.wav", "c.wav"]))
-        zip_mock.assert_has_calls(_create_zip_mock_calls("archivename", "/tmp/proj/Exports", {
+        zip_mock.assert_has_calls(_create_zip_mock_calls("archivename", "/tmp/proj/Export", {
             "a.wav": "a.wav",
             "b.wav": "b.wav",
             "c.wav": "c.wav"

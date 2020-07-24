@@ -32,7 +32,7 @@ def main():
 
     if args.command == 'pack':
         config = __read_config("pack.yml")
-        export_dir = "Exports"
+        export_dir = "Export"
         project_name = config["name"]
         archive_name = config.get("archive", project_name)
 
