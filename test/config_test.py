@@ -17,7 +17,6 @@
 
 import datetime
 import unittest
-from unittest.mock import patch, Mock
 from trackpack import config
 
 

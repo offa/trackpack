@@ -16,8 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-from datetime import date
-import yaml
 from trackpack import cli
 from trackpack import config
 from trackpack.trackpacker import TrackPacker
