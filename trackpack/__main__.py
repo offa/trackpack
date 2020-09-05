@@ -19,35 +19,31 @@ import sys
 from datetime import date
 import yaml
 from trackpack import cli
+from trackpack import config
 from trackpack.trackpacker import TrackPacker
 
 
 def __read_config(filename):
     with open(filename, "r") as config_file:
-        return yaml.safe_load(config_file)
+        cfg = config.Config()
+        cfg.load_from_yaml(config_file)
+        return cfg
 
 
 def main():
     args = cli.parse_args(sys.argv[1:])
 
     if args.command == 'pack':
-        config = __read_config("pack.yml")
-        export_dir = "Export"
-        project_name = config["name"]
-        archive_name = config.get("archive", project_name)
+        cfg = __read_config("pack.yml")
 
         if args.archive_name:
-            archive_name = args.archive_name
+            cfg.archive_name = args.archive_name
+        if args.append_date:
+            cfg.append_date = args.append_date
 
-        if archive_name.endswith(".zip"):
-            archive_name = args.archive_name[:-4]
-
-        if args.append_date or config.get("append_date", False):
-            archive_name = "-".join((archive_name, date.today().strftime('%Y-%m-%d')))
-
-        trackpacker = TrackPacker(project_name, export_dir)
+        trackpacker = TrackPacker(cfg.name, cfg.export_dir)
         (_, stems) = trackpacker.discover_audiofiles(args.pack_explicit_files)
-        trackpacker.pack_files(archive_name, stems)
+        trackpacker.pack_files(cfg.archive_name, stems)
 
 
 if __name__ == '__main__':
