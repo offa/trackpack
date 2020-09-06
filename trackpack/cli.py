@@ -23,7 +23,7 @@ def parse_args(args):
     subparsers = parser.add_subparsers(dest="command")
     pack_parser = subparsers.add_parser("pack", help="Pack audio files")
     pack_parser.add_argument("pack_explicit_files", metavar="file", nargs="*", help="Files to pack")
-    pack_parser.add_argument("--name", dest="archive_name", type=str, help="Archive name")
+    pack_parser.add_argument("--archive-name", dest="archive_name", type=str, help="Archive name")
     pack_parser.add_argument("--append-date", dest="append_date", action="store_true",
                              help="Append date to archive name")
 

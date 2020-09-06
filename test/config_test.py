@@ -60,7 +60,7 @@ class TestConfig(unittest.TestCase):
 
     @patch('trackpack.config.date', Mock(today=lambda: datetime.date(2020, 1, 2)))
     def test_load_from_cli_args(self):
-        args = cli.parse_args(["pack", "--name", "proj.zip", "--append-date"])
+        args = cli.parse_args(["pack", "--archive-name", "proj.zip", "--append-date"])
         cfg = config.Config()
         cfg.archive_name = "should override"
         cfg.append_date = False
