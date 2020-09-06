@@ -17,6 +17,7 @@
 
 import datetime
 import unittest
+from unittest.mock import patch, Mock
 from trackpack import config
 
 
@@ -34,13 +35,12 @@ class TestConfig(unittest.TestCase):
         cfg.archive_name = "stems.zip"
         self.assertEqual("stems", cfg.archive_name)
 
+    @patch('trackpack.config.date', Mock(today=lambda: datetime.date(2020, 1, 1)))
     def test_append_date_appends_date_to_archive_name(self):
-        today = datetime.date.today().strftime('%Y-%m-%d')
-
         cfg = config.Config()
         cfg.archive_name = "xyz"
         cfg.append_date = True
-        self.assertEqual("xyz-{}".format(today), cfg.archive_name)
+        self.assertEqual("xyz-2020-01-01", cfg.archive_name)
 
     def test_load_from_yaml(self):
         cfg = config.Config()
