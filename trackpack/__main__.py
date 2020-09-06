@@ -33,11 +33,7 @@ def main():
 
     if args.command == 'pack':
         cfg = __read_config("pack.yml")
-
-        if args.archive_name:
-            cfg.archive_name = args.archive_name
-        if args.append_date:
-            cfg.append_date = args.append_date
+        cfg.load_from_cli_args(args)
 
         trackpacker = TrackPacker(cfg.name, cfg.export_dir)
         (_, stems) = trackpacker.discover_audiofiles(args.pack_explicit_files)

@@ -18,7 +18,7 @@
 import datetime
 import unittest
 from unittest.mock import patch, Mock
-from trackpack import config
+from trackpack import config, cli
 
 
 class TestConfig(unittest.TestCase):
@@ -56,4 +56,15 @@ class TestConfig(unittest.TestCase):
 
         cfg = config.Config()
         cfg.load_from_yaml("name: project-1\narchive: proj1\nappend_date: true")
+        self.assertTrue(cfg.append_date)
+
+    @patch('trackpack.config.date', Mock(today=lambda: datetime.date(2020, 1, 2)))
+    def test_load_from_cli_args(self):
+        args = cli.parse_args(["pack", "--name", "proj.zip", "--append-date"])
+        cfg = config.Config()
+        cfg.archive_name = "should override"
+        cfg.append_date = False
+        cfg.load_from_cli_args(args)
+
+        self.assertEqual("proj-2020-01-02", cfg.archive_name)
         self.assertTrue(cfg.append_date)

@@ -45,3 +45,9 @@ class Config:
         self.name = config["name"]
         self.archive_name = config.get("archive", self.name)
         self.append_date = config.get("append_date", False)
+
+    def load_from_cli_args(self, cli_args):
+        if cli_args.archive_name:
+            self.archive_name = cli_args.archive_name
+        if cli_args.append_date:
+            self.append_date = cli_args.append_date
