@@ -20,12 +20,18 @@ from trackpack import cli
 from trackpack import config
 from trackpack.trackpacker import TrackPacker
 
+def __fail(msg):
+    print("ERROR: {}".format(msg))
+    sys.exit(1)
 
 def __read_config(filename):
-    with open(filename, "r") as config_file:
-        cfg = config.Config()
-        cfg.load_from_yaml(config_file)
-        return cfg
+    try:
+        with open(filename, "r") as config_file:
+            cfg = config.Config()
+            cfg.load_from_yaml(config_file)
+            return cfg
+    except FileNotFoundError:
+        __fail("'{}' not found".format(filename))
 
 
 def main():
