@@ -1,6 +1,6 @@
 # trackpack - Package audio tracks
 #
-# Copyright (C) 2020  offa
+# Copyright (C) 2020-2021  offa
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
