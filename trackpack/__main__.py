@@ -25,6 +25,7 @@ def __fail(msg):
     print("ERROR: {}".format(msg))
     sys.exit(1)
 
+
 def __read_config(filename):
     with open(filename, "r") as config_file:
         cfg = config.Config()

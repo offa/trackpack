@@ -31,26 +31,25 @@ class TrackPacker:
     def discover_audiofiles(self, explicit_files=None):
         (_, _, filenames) = next(os.walk(self.__export_dir))
         master = "{}.wav".format(self.__project_name)
-        filenames = list(filter(lambda f: f.endswith(".wav"), filenames))
+        files = list(filter(lambda f: f.endswith(".wav"), filenames))
 
-        if master not in filenames:
+        if master not in files:
             raise MissingFileException("Master track not found")
-        filenames.remove(master)
+        files.remove(master)
 
         if explicit_files:
-            filenames = [os.path.abspath(file) for file in explicit_files]
+            files = [os.path.abspath(file) for file in explicit_files]
         else:
-            filenames = [os.path.abspath(os.path.join(self.__export_dir,
-                                                      file)) for file in filenames]
+            files = [os.path.abspath(os.path.join(self.__export_dir, file)) for file in files]
 
-        if not filenames:
+        if not files:
             raise MissingFileException("No stems found")
 
-        return (master, [os.path.abspath(file) for file in filenames])
+        return (master, [os.path.abspath(file) for file in files])
 
     def pack_files(self, archive_name, files):
-        with ZipFile("{}.zip".format(os.path.join(self.__export_dir,
-                                                  archive_name)), "w") as archive:
+        with ZipFile("{}.zip".format(os.path.join(self.__export_dir, archive_name)),
+                     "w") as archive:
             for file in files:
                 archive.write(file, self.__normalize_stem_name(os.path.basename(file)))
 

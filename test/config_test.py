@@ -22,7 +22,6 @@ from trackpack import config, cli
 
 
 class TestConfig(unittest.TestCase):
-
     def test_default_config(self):
         cfg = config.Config()
         self.assertEqual("unnamed", cfg.name)
