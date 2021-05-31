@@ -2,4 +2,4 @@ PyYAML
 
 pytest
 pylint
-autopep8
+yapf
