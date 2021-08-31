@@ -21,4 +21,4 @@ jobs:
       - name: Test
         run: |
           pytest
-          pylint trackpack test
+          pylint trackpack test *.py
