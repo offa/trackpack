@@ -27,7 +27,7 @@ def __fail(msg):
 
 
 def __read_config(filename):
-    with open(filename, "r") as config_file:
+    with open(filename, "r", encoding="utf-8") as config_file:
         cfg = config.Config()
         cfg.load_from_yaml(config_file)
         return cfg
