@@ -10,9 +10,9 @@ jobs:
     name: "CodeQL"
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@main
       - name: Setup python
-        uses: actions/setup-python@master
+        uses: actions/setup-python@main
         with:
           python-version: 3.9
       - name: CodeQL Initialization
