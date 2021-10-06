@@ -22,7 +22,7 @@ from trackpack.trackpacker import TrackPacker
 
 
 def __fail(msg):
-    print("ERROR: {}".format(msg))
+    print(f"ERROR: {msg}")
     sys.exit(1)
 
 
@@ -45,7 +45,7 @@ def main():
             (_, stems) = trackpacker.discover_audiofiles(args.pack_explicit_files)
             trackpacker.pack_files(cfg.archive_name, stems)
         except FileNotFoundError as ex:
-            __fail("{}: {}".format(ex.strerror, ex.filename))
+            __fail(f"{ex.strerror}: {ex.filename}")
 
 
 if __name__ == '__main__':

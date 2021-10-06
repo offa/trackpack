@@ -30,7 +30,7 @@ class TrackPacker:
 
     def discover_audiofiles(self, explicit_files=None):
         (_, _, filenames) = next(os.walk(self.__export_dir))
-        master = "{}.wav".format(self.__project_name)
+        master = f"{self.__project_name}.wav"
         files = list(filter(lambda f: f.endswith(".wav"), filenames))
 
         if master not in files:
@@ -48,8 +48,7 @@ class TrackPacker:
         return (master, [os.path.abspath(file) for file in files])
 
     def pack_files(self, archive_name, files):
-        with ZipFile("{}.zip".format(os.path.join(self.__export_dir, archive_name)),
-                     "w") as archive:
+        with ZipFile(f"{os.path.join(self.__export_dir, archive_name)}.zip", "w") as archive:
             for file in files:
                 archive.write(file, self.__normalize_stem_name(os.path.basename(file)))
 

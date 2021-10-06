@@ -136,7 +136,7 @@ def _create_walk_files(files):
 
 def _create_zip_mock_calls(archive_name, proj_export_dir, files):
     call_list = [
-        call(os.path.join(proj_export_dir, "{}.zip".format(archive_name)), "w"),
+        call(os.path.join(proj_export_dir, f"{archive_name}.zip"), "w"),
         call().__enter__()
     ]
 
