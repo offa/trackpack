@@ -15,6 +15,7 @@ jobs:
         uses: actions/setup-python@main
         with:
           python-version: 3.9
+          cache: 'pip'
       - name: CodeQL Initialization
         uses: github/codeql-action/init@v1
         with:
