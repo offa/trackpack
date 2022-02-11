@@ -20,6 +20,8 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
       - name: Test
-        run: |
-          pytest
-          pylint trackpack test *.py
+        run: pytest
+      - name: Lint
+        run: pylint trackpack test *.py
+      - name: Build Package
+        run: python setup.py sdist bdist_wheel
