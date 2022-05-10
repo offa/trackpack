@@ -24,6 +24,7 @@ class MissingFileException(Exception):
 
 
 class TrackPacker:
+
     def __init__(self, project_name, export_dir):
         self.__project_name = project_name
         self.__export_dir = export_dir

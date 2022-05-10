@@ -22,6 +22,7 @@ from trackpack.trackpacker import TrackPacker, MissingFileException
 
 
 class TestTrackPack(unittest.TestCase):
+
     @patch("os.walk")
     def test_discover_audiofiles_returns_audio_files(self, walk_mock):
         walk_mock.return_value = _create_walk_files(

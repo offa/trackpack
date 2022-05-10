@@ -20,6 +20,7 @@ from trackpack import cli
 
 
 class TestCli(unittest.TestCase):
+
     def test_prints_help_if_no_arguments_passed(self):
         with self.assertRaises(SystemExit) as context:
             cli.parse_args([])
