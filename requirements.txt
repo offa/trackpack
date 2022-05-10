@@ -2,7 +2,7 @@ PyYAML == 6.0.0
 
 # Test
 pytest == 7.1.2
-pylint == 2.13.7
+pylint == 2.13.8
 
 # Formatting
 yapf == 0.32.0
