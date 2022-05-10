@@ -20,6 +20,7 @@ import yaml
 
 
 class Config:
+
     def __init__(self):
         self.name = "unnamed"
         self._archive_name = "unnamed"
