@@ -86,7 +86,6 @@ class TestTrackPack(unittest.TestCase):
         self.assertListEqual(_files_in_dir("/tmp/x/", ['proj stem1.wav', 'proj stem3.wav']), stems)
 
     @patch("trackpack.trackpacker.ZipFile", autospec=True)
-    # pylint: disable=R0201
     def test_pack_files_creates_archive_of_stems(self, zip_mock):
         trackpacker = TrackPacker("projname", "/tmp/proj/Export")
         trackpacker.pack_files("archivename",
@@ -99,7 +98,6 @@ class TestTrackPack(unittest.TestCase):
             }))
 
     @patch("trackpack.trackpacker.ZipFile", autospec=True)
-    # pylint: disable=R0201
     def test_pack_files_removes_project_name_from_stems(self, zip_mock):
         trackpacker = TrackPacker("proj1", "/tmp/x")
         trackpacker.pack_files("archive1",
@@ -112,7 +110,6 @@ class TestTrackPack(unittest.TestCase):
             }))
 
     @patch("trackpack.trackpacker.ZipFile", autospec=True)
-    # pylint: disable=R0201
     def test_pack_files_replaces_blanks_in_names(self, zip_mock):
         trackpacker = TrackPacker("proj1", "/tmp/st u v w")
         trackpacker.pack_files(
@@ -138,10 +135,11 @@ def _create_walk_files(files):
 def _create_zip_mock_calls(archive_name, proj_export_dir, files):
     call_list = [
         call(os.path.join(proj_export_dir, f"{archive_name}.zip"), "w"),
-        call().__enter__()
+        call().__enter__()    # pylint: disable=unnecessary-dunder-call
     ]
 
     for name, entry in files.items():
+        # pylint: disable=unnecessary-dunder-call
         call_list.append(call().__enter__().write(os.path.join(proj_export_dir, name), entry))
     call_list.append(call().__exit__(None, None, None))
 
