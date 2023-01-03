@@ -51,11 +51,11 @@ class TestConfig(unittest.TestCase):
         self.assertFalse(cfg.append_date)
 
         cfg = config.Config()
-        cfg.load_from_yaml("name: project-1\narchive: proj1")
+        cfg.load_from_yaml("name: project-1\narchive_name: proj1")
         self.assertEqual("proj1", cfg.archive_name)
 
         cfg = config.Config()
-        cfg.load_from_yaml("name: project-1\narchive: proj1\nappend_date: true")
+        cfg.load_from_yaml("name: project-1\narchive_name: proj1\nappend_date: true")
         self.assertTrue(cfg.append_date)
 
     @patch('trackpack.config.date', Mock(today=lambda: datetime.date(2020, 1, 2)))

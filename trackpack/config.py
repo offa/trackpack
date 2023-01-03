@@ -43,7 +43,7 @@ class Config:
     def load_from_yaml(self, yaml_content):
         config = yaml.safe_load(yaml_content)
         self.name = config["name"]
-        self.archive_name = config.get("archive", self.name)
+        self.archive_name = config.get("archive_name", self.name)
         self.append_date = config.get("append_date", False)
 
     def load_from_cli_args(self, cli_args):
