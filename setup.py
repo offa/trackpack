@@ -24,4 +24,4 @@ setuptools.setup(name='trackpack',
                      'Topic :: Multimedia :: Sound/Audio',
                      'Topic :: Utilities',
                  ],
-                 install_requires=['PyYAML'])
+                 install_requires=['PyYAML == 6.0.0'])
