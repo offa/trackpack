@@ -8,4 +8,4 @@ pylint == 2.17.0
 yapf == 0.32.0
 
 # Package
-wheel == 0.38.4
+wheel == 0.40.0
