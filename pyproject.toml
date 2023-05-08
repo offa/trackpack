@@ -1,0 +1,47 @@
+[project]
+name = "trackpack"
+dynamic = ["version"]
+authors = [{name = "offa"}]
+description = "Package audio tracks."
+license = {file = "LICENSE"}
+readme = "README.md"
+requires-python = ">= 3.7"
+dependencies = [
+    "PyYAML == 6.0.0"
+]
+keywords = ["audio", "packaging", "stems"]
+classifiers = [
+    "Environment :: Console",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Topic :: Multimedia :: Sound/Audio",
+    "Topic :: Utilities"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/offa/trackpack"
+
+[project.scripts]
+trackpack = "trackpack.__main__:main"
+
+[project.optional-dependencies]
+dev = [
+    "pylint == 2.17.4",
+    "pytest == 7.3.1",
+    "yapf == 0.33.0"
+]
+
+[build-system]
+requires = ["setuptools"]
+
+[tool.setuptools.dynamic]
+version = {attr = "trackpack.version.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["trackpack"]
+
+[tool.yapf]
+based_on_style = "pep8"
+spaces_before_comment = 4
+split_before_logical_operator = true
+column_limit = 100
+

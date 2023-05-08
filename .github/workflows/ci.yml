@@ -18,13 +18,11 @@ jobs:
           python-version: ${{ matrix.python }}
           cache: 'pip'
       - name: Install Dependencies
-        run: pip install -r requirements.txt
+        run: pip install ".[dev]"
       - name: Test
         run: pytest
       - name: Lint
-        run: pylint trackpack test *.py
-      - name: Build Package
-        run: python setup.py sdist bdist_wheel
+        run: pylint trackpack test
 
   formatting:
     name: formatting
