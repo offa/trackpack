@@ -14,12 +14,12 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@main
         with:
-          python-version: '3.11'
+          python-version: '3.12'
           cache: 'pip'
       - name: CodeQL Initialization
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: python
           queries: +security-and-quality
       - name: CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
