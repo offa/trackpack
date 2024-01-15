@@ -21,8 +21,10 @@ jobs:
         run: pip install ".[dev]"
       - name: Test
         run: pytest
-      - name: Lint
+      - name: Lint (pylint)
         run: pylint trackpack test
+      - name: Lint (ruff)
+        run: ruff check --output-format=github .
 
   formatting:
     name: formatting
@@ -30,7 +32,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@main
-      - name: Check formatting
-        uses: AlexanderMelde/yapf-action@master
+      - name: Setup Python
+        uses: actions/setup-python@main
         with:
-          args: --verbose
+          python-version: "3.12"
+          cache: 'pip'
+      - name: Setup
+        run: pip install ".[dev]"
+      - name: Check Formatting
+        run: ruff format --check --diff .
