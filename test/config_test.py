@@ -22,7 +22,6 @@ from trackpack import config, cli
 
 
 class TestConfig(unittest.TestCase):
-
     def test_default_config(self):
         cfg = config.Config()
         self.assertEqual("unnamed", cfg.name)
@@ -35,7 +34,7 @@ class TestConfig(unittest.TestCase):
         cfg.archive_name = "stems.zip"
         self.assertEqual("stems", cfg.archive_name)
 
-    @patch('trackpack.config.date', Mock(today=lambda: datetime.date(2020, 1, 1)))
+    @patch("trackpack.config.date", Mock(today=lambda: datetime.date(2020, 1, 1)))
     def test_append_date_appends_date_to_archive_name(self):
         cfg = config.Config()
         cfg.archive_name = "xyz"
@@ -58,7 +57,7 @@ class TestConfig(unittest.TestCase):
         cfg.load_from_yaml("name: project-1\narchive_name: proj1\nappend_date: true")
         self.assertTrue(cfg.append_date)
 
-    @patch('trackpack.config.date', Mock(today=lambda: datetime.date(2020, 1, 2)))
+    @patch("trackpack.config.date", Mock(today=lambda: datetime.date(2020, 1, 2)))
     def test_load_from_cli_args(self):
         args = cli.parse_args(["pack", "--archive-name", "proj.zip", "--append-date"])
         cfg = config.Config()

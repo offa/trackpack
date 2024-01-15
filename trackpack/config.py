@@ -20,7 +20,6 @@ import yaml
 
 
 class Config:
-
     def __init__(self):
         self.name = "unnamed"
         self._archive_name = "unnamed"
@@ -30,7 +29,7 @@ class Config:
     @property
     def archive_name(self):
         if self.append_date:
-            return "-".join((self._archive_name, date.today().strftime('%Y-%m-%d')))
+            return "-".join((self._archive_name, date.today().strftime("%Y-%m-%d")))
         return self._archive_name
 
     @archive_name.setter

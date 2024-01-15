@@ -20,19 +20,29 @@ from trackpack.version import __version__
 
 
 def parse_args(args):
-    parser = argparse.ArgumentParser(prog="trackpack", description='Audio tracks packaging')
+    parser = argparse.ArgumentParser(
+        prog="trackpack", description="Audio tracks packaging"
+    )
     subparsers = parser.add_subparsers(dest="command")
     pack_parser = subparsers.add_parser("pack", help="Pack audio files")
-    pack_parser.add_argument("pack_explicit_files", metavar="file", nargs="*", help="Files to pack")
-    parser.add_argument('--version',
-                        '-v',
-                        action='version',
-                        version=f"%(prog)s {__version__}",
-                        help='Shows the program version')
-    pack_parser.add_argument("--archive-name", dest="archive_name", type=str, help="Archive name")
-    pack_parser.add_argument("--append-date",
-                             dest="append_date",
-                             action="store_true",
-                             help="Append date to archive name")
+    pack_parser.add_argument(
+        "pack_explicit_files", metavar="file", nargs="*", help="Files to pack"
+    )
+    parser.add_argument(
+        "--version",
+        "-v",
+        action="version",
+        version=f"%(prog)s {__version__}",
+        help="Shows the program version",
+    )
+    pack_parser.add_argument(
+        "--archive-name", dest="archive_name", type=str, help="Archive name"
+    )
+    pack_parser.add_argument(
+        "--append-date",
+        dest="append_date",
+        action="store_true",
+        help="Append date to archive name",
+    )
 
-    return parser.parse_args(args=args if args else ['--help'])
+    return parser.parse_args(args=args if args else ["--help"])

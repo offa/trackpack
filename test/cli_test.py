@@ -20,28 +20,27 @@ from trackpack import cli
 
 
 class TestCli(unittest.TestCase):
-
     def test_prints_help_if_no_arguments_passed(self):
         with self.assertRaises(SystemExit) as context:
             cli.parse_args([])
         self.assertEqual(0, context.exception.code)
 
     def test_pack_command_default(self):
-        args = cli.parse_args(['pack'])
+        args = cli.parse_args(["pack"])
         self.assertEqual("pack", args.command)
         self.assertFalse(args.pack_explicit_files)
 
     def test_pack_command_with_explicit_file(self):
-        args = cli.parse_args(['pack', 'f0.wav', 'f1.wav'])
+        args = cli.parse_args(["pack", "f0.wav", "f1.wav"])
         self.assertEqual("pack", args.command)
-        self.assertEqual(['f0.wav', 'f1.wav'], args.pack_explicit_files)
+        self.assertEqual(["f0.wav", "f1.wav"], args.pack_explicit_files)
 
     def test_pack_with_custom_archive_name(self):
-        args = cli.parse_args(['pack', "--archive-name", "xyz"])
+        args = cli.parse_args(["pack", "--archive-name", "xyz"])
         self.assertEqual("pack", args.command)
         self.assertEqual("xyz", args.archive_name)
 
     def test_pack_with_date(self):
-        args = cli.parse_args(['pack', "--append-date"])
+        args = cli.parse_args(["pack", "--append-date"])
         self.assertEqual("pack", args.command)
         self.assertTrue(args.append_date)

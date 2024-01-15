@@ -36,7 +36,7 @@ def __read_config(filename):
 def main():
     args = cli.parse_args(sys.argv[1:])
 
-    if args.command == 'pack':
+    if args.command == "pack":
         try:
             cfg = __read_config("pack.yml")
             cfg.load_from_cli_args(args)
@@ -48,5 +48,5 @@ def main():
             __fail(f"{ex.strerror}: {ex.filename}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
