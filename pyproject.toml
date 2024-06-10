@@ -27,7 +27,7 @@ trackpack = "trackpack.__main__:main"
 dev = [
     "pylint == 3.2.3",
     "pytest == 8.2.1",
-    "ruff == 0.4.7"
+    "ruff == 0.4.8"
 ]
 
 [build-system]
