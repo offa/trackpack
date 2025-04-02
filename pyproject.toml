@@ -5,7 +5,7 @@ authors = [{name = "offa"}]
 description = "Package audio tracks."
 license = {file = "LICENSE"}
 readme = "README.md"
-requires-python = ">= 3.9"
+requires-python = ">= 3.10"
 dependencies = [
     "PyYAML == 6.0.2"
 ]
