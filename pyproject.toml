@@ -7,7 +7,7 @@ license = {file = "LICENSE"}
 readme = "README.md"
 requires-python = ">= 3.10"
 dependencies = [
-    "PyYAML == 6.0.2"
+    "PyYAML == 6.0.3"
 ]
 keywords = ["audio", "packaging", "stems"]
 classifiers = [
