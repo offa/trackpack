@@ -25,7 +25,7 @@ trackpack = "trackpack.__main__:main"
 
 [project.optional-dependencies]
 dev = [
-    "pylint == 4.0.2",
+    "pylint == 4.0.3",
     "pytest == 9.0.0",
     "ruff == 0.14.4"
 ]
