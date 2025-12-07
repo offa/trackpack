@@ -22,26 +22,26 @@ from trackpack import config, cli
 
 
 class TestConfig(unittest.TestCase):
-    def test_default_config(self):
+    def test_default_config(self) -> None:
         cfg = config.Config()
         self.assertEqual("unnamed", cfg.name)
         self.assertEqual("unnamed", cfg.archive_name)
         self.assertEqual("Export", cfg.export_dir)
         self.assertFalse(cfg.append_date)
 
-    def test_extension_is_stripped_from_archivename(self):
+    def test_extension_is_stripped_from_archivename(self) -> None:
         cfg = config.Config()
         cfg.archive_name = "stems.zip"
         self.assertEqual("stems", cfg.archive_name)
 
     @patch("trackpack.config.date", Mock(today=lambda: datetime.date(2020, 1, 1)))
-    def test_append_date_appends_date_to_archive_name(self):
+    def test_append_date_appends_date_to_archive_name(self) -> None:
         cfg = config.Config()
         cfg.archive_name = "xyz"
         cfg.append_date = True
         self.assertEqual("xyz-2020-01-01", cfg.archive_name)
 
-    def test_load_from_yaml(self):
+    def test_load_from_yaml(self) -> None:
         cfg = config.Config()
         cfg.load_from_yaml("name: project-1")
         self.assertEqual("project-1", cfg.name)
@@ -58,7 +58,7 @@ class TestConfig(unittest.TestCase):
         self.assertTrue(cfg.append_date)
 
     @patch("trackpack.config.date", Mock(today=lambda: datetime.date(2020, 1, 2)))
-    def test_load_from_cli_args(self):
+    def test_load_from_cli_args(self) -> None:
         args = cli.parse_args(["pack", "--archive-name", "proj.zip", "--append-date"])
         cfg = config.Config()
         cfg.archive_name = "should override"

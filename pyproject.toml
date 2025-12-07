@@ -17,6 +17,12 @@ classifiers = [
     "Topic :: Utilities"
 ]
 
+[tool.pyrefly]
+project-includes = [
+    "**/*.py*",
+    "**/*.ipynb",
+]
+
 [project.urls]
 "Homepage" = "https://github.com/offa/trackpack"
 
@@ -26,6 +32,7 @@ trackpack = "trackpack.__main__:main"
 [project.optional-dependencies]
 dev = [
     "pylint == 4.0.4",
+    "pyrefly==0.44.2",
     "pytest == 9.0.2",
     "ruff == 0.14.8"
 ]
