@@ -19,7 +19,7 @@ import argparse
 from trackpack.version import __version__
 
 
-def parse_args(args):
+def parse_args(args: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="trackpack", description="Audio tracks packaging"
     )

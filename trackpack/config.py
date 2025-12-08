@@ -20,32 +20,32 @@ import yaml
 
 
 class Config:
-    def __init__(self):
+    def __init__(self) -> None:
         self.name = "unnamed"
         self._archive_name = "unnamed"
         self.export_dir = "Export"
         self.append_date = False
 
     @property
-    def archive_name(self):
+    def archive_name(self) -> str:
         if self.append_date:
             return "-".join((self._archive_name, date.today().strftime("%Y-%m-%d")))
         return self._archive_name
 
     @archive_name.setter
-    def archive_name(self, archive_name):
+    def archive_name(self, archive_name: str) -> None:
         if archive_name.endswith(".zip"):
             self._archive_name = archive_name[:-4]
         else:
             self._archive_name = archive_name
 
-    def load_from_yaml(self, yaml_content):
+    def load_from_yaml(self, yaml_content) -> None:
         config = yaml.safe_load(yaml_content)
         self.name = config["name"]
         self.archive_name = config.get("archive_name", self.name)
         self.append_date = config.get("append_date", False)
 
-    def load_from_cli_args(self, cli_args):
+    def load_from_cli_args(self, cli_args) -> None:
         if cli_args.archive_name:
             self.archive_name = cli_args.archive_name
         if cli_args.append_date:

@@ -17,23 +17,24 @@
 
 import sys
 
-from trackpack import cli, config
+from trackpack import cli
+from trackpack.config import Config
 from trackpack.trackpacker import TrackPacker
 
 
-def __fail(msg):
+def __fail(msg: str) -> None:
     print(f"ERROR: {msg}")
     sys.exit(1)
 
 
-def __read_config(filename):
+def __read_config(filename: str) -> Config:
     with open(filename, "r", encoding="utf-8") as config_file:
-        cfg = config.Config()
+        cfg = Config()
         cfg.load_from_yaml(config_file)
         return cfg
 
 
-def main():
+def main() -> None:
     args = cli.parse_args(sys.argv[1:])
 
     if args.command == "pack":
