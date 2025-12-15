@@ -34,7 +34,7 @@ dev = [
     "pylint == 4.0.4",
     "pyrefly==0.44.2",
     "pytest == 9.0.2",
-    "ruff == 0.14.8"
+    "ruff == 0.14.9"
 ]
 
 [build-system]
