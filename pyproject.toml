@@ -31,7 +31,7 @@ trackpack = "trackpack.__main__:main"
 
 [project.optional-dependencies]
 dev = [
-    "pylint == 4.0.4",
+    "pylint == 4.0.5",
     "pyrefly==0.52.0",
     "pytest == 9.0.2",
     "ruff == 0.15.1"
