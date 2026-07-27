@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import date
+from datetime import datetime, timezone
 
 import yaml
 
@@ -30,7 +30,8 @@ class Config:
     @property
     def archive_name(self) -> str:
         if self.append_date:
-            return "-".join((self._archive_name, date.today().strftime("%Y-%m-%d")))
+            today_date = datetime.now(timezone.utc).date()
+            return "-".join((self._archive_name, today_date.strftime("%Y-%m-%d")))
         return self._archive_name
 
     @archive_name.setter

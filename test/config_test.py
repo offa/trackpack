@@ -17,7 +17,7 @@
 
 import datetime
 import unittest
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 from trackpack import cli, config
 
@@ -35,8 +35,10 @@ class TestConfig(unittest.TestCase):
         cfg.archive_name = "stems.zip"
         self.assertEqual("stems", cfg.archive_name)
 
-    @patch("trackpack.config.date", Mock(today=lambda: datetime.date(2020, 1, 1)))
-    def test_append_date_appends_date_to_archive_name(self) -> None:
+    @patch("trackpack.config.datetime")
+    def test_append_date_appends_date_to_archive_name(self, mock_datetime) -> None:
+        mock_datetime.now.return_value.date.return_value = datetime.date(2020, 1, 1)
+
         cfg = config.Config()
         cfg.archive_name = "xyz"
         cfg.append_date = True
@@ -58,8 +60,10 @@ class TestConfig(unittest.TestCase):
         cfg.load_from_yaml("name: project-1\narchive_name: proj1\nappend_date: true")
         self.assertTrue(cfg.append_date)
 
-    @patch("trackpack.config.date", Mock(today=lambda: datetime.date(2020, 1, 2)))
-    def test_load_from_cli_args(self) -> None:
+    @patch("trackpack.config.datetime")
+    def test_load_from_cli_args(self, mock_datetime) -> None:
+        mock_datetime.now.return_value.date.return_value = datetime.date(2020, 1, 2)
+
         args = cli.parse_args(["pack", "--archive-name", "proj.zip", "--append-date"])
         cfg = config.Config()
         cfg.archive_name = "should override"
