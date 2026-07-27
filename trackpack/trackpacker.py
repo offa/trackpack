@@ -57,6 +57,5 @@ class TrackPacker:
                 archive.write(file, self.__normalize_stem_name(os.path.basename(file)))
 
     def __normalize_stem_name(self, stem_name: str) -> str:
-        if stem_name.startswith(self.__project_name):
-            stem_name = stem_name[len(self.__project_name) :]
+        stem_name = stem_name.removeprefix(self.__project_name)
         return stem_name.strip().replace(" ", "-")

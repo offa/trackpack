@@ -17,8 +17,9 @@
 
 import datetime
 import unittest
-from unittest.mock import patch, Mock
-from trackpack import config, cli
+from unittest.mock import Mock, patch
+
+from trackpack import cli, config
 
 
 class TestConfig(unittest.TestCase):
