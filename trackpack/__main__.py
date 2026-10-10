@@ -32,7 +32,7 @@ def __read_config(filename: str) -> Config:
     config_path = Path(filename)
     with config_path.open("r", encoding="utf-8") as config_file:
         cfg = Config()
-        cfg.load_from_yaml(config_file.read_text())
+        cfg.load_from_yaml(config_file.read())
         return cfg
 
 
