@@ -30,10 +30,7 @@ class TrackPacker:
         self._export_dir = Path(export_dir)
 
     def discover_audiofiles(self, explicit_files: list[str] | None = None):
-        filenames = []
-        for _, _, files in os.walk(str(self._export_dir)):
-            for f in files:
-                filenames.append(f)
+        filenames = [f for _, _, files in os.walk(str(self._export_dir)) for f in files]
 
         master = f"{self._project_name}.wav"
         files = [f for f in filenames if f.endswith(".wav")]
