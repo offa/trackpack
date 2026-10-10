@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+from pathlib import Path
 from zipfile import ZipFile
 
 
@@ -25,37 +26,35 @@ class MissingFileException(Exception):
 
 class TrackPacker:
     def __init__(self, project_name: str, export_dir: str) -> None:
-        self.__project_name = project_name
-        self.__export_dir = export_dir
+        self._project_name = project_name
+        self._export_dir = Path(export_dir)
 
     def discover_audiofiles(self, explicit_files: list[str] | None = None):
-        (_, _, filenames) = next(os.walk(self.__export_dir))
-        master = f"{self.__project_name}.wav"
-        files = list(filter(lambda f: f.endswith(".wav"), filenames))
+        filenames = [f for _, _, files in os.walk(str(self._export_dir)) for f in files]
+
+        master = f"{self._project_name}.wav"
+        files = [f for f in filenames if f.endswith(".wav")]
 
         if master not in files:
             raise MissingFileException("Master track not found")
         files.remove(master)
 
         if explicit_files:
-            files = [os.path.abspath(file) for file in explicit_files]
+            files = [Path(file).resolve() for file in explicit_files]
         else:
-            files = [
-                os.path.abspath(os.path.join(self.__export_dir, file)) for file in files
-            ]
+            files = [self._export_dir / f for f in files]
 
         if not files:
             raise MissingFileException("No stems found")
 
-        return (master, [os.path.abspath(file) for file in files])
+        return (master, [f.resolve() for f in files])
 
-    def pack_files(self, archive_name: str, files: list[str]):
-        with ZipFile(
-            f"{os.path.join(self.__export_dir, archive_name)}.zip", "w"
-        ) as archive:
+    def pack_files(self, archive_name: str, files: list[Path]):
+        archive_path = self._export_dir / f"{archive_name}.zip"
+        with ZipFile(archive_path, "w") as archive:
             for file in files:
-                archive.write(file, self.__normalize_stem_name(os.path.basename(file)))
+                archive.write(file, self._normalize_stem_name(file.name))
 
-    def __normalize_stem_name(self, stem_name: str) -> str:
-        stem_name = stem_name.removeprefix(self.__project_name)
+    def _normalize_stem_name(self, stem_name: str) -> str:
+        stem_name = stem_name.removeprefix(self._project_name)
         return stem_name.strip().replace(" ", "-")

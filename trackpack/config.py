@@ -31,7 +31,7 @@ class Config:
     def archive_name(self) -> str:
         if self.append_date:
             today_date = datetime.now(timezone.utc).date()
-            return "-".join((self._archive_name, today_date.strftime("%Y-%m-%d")))
+            return f"{self._archive_name}-{today_date.strftime('%Y-%m-%d')}"
         return self._archive_name
 
     @archive_name.setter
@@ -41,10 +41,14 @@ class Config:
         else:
             self._archive_name = archive_name
 
-    def load_from_yaml(self, yaml_content) -> None:
-        config = yaml.safe_load(yaml_content)
-        self.name = config["name"]
-        self.archive_name = config.get("archive_name", self.name)
+    def load_from_yaml(self, yaml_content: str) -> None:
+        try:
+            config = yaml.safe_load(yaml_content)
+        except yaml.YAMLError as e:
+            raise ValueError(f"Error parsing YAML content: {e}") from e
+
+        self.name = config.get("name", "unnamed")
+        self._archive_name = config.get("archive_name", self.name)
         self.append_date = config.get("append_date", False)
 
     def load_from_cli_args(self, cli_args) -> None:

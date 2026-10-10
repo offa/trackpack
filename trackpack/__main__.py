@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+from pathlib import Path
 
 from trackpack import cli
 from trackpack.config import Config
@@ -28,9 +29,10 @@ def __fail(msg: str) -> None:
 
 
 def __read_config(filename: str) -> Config:
-    with open(filename, "r", encoding="utf-8") as config_file:
+    config_path = Path(filename)
+    with config_path.open("r", encoding="utf-8") as config_file:
         cfg = Config()
-        cfg.load_from_yaml(config_file)
+        cfg.load_from_yaml(config_file.read())
         return cfg
 
 
@@ -46,7 +48,7 @@ def main() -> None:
             (_, stems) = trackpacker.discover_audiofiles(args.pack_explicit_files)
             trackpacker.pack_files(cfg.archive_name, stems)
         except FileNotFoundError as ex:
-            __fail(f"{ex.strerror}: {ex.filename}")
+            __fail(f"Configuration or file not found: '{ex.filename}'")
 
 
 if __name__ == "__main__":
