@@ -18,6 +18,7 @@
 import os
 import unittest
 from unittest.mock import call, patch
+from pathlib import Path
 
 from trackpack.trackpacker import MissingFileException, TrackPacker
 
@@ -25,6 +26,8 @@ from trackpack.trackpacker import MissingFileException, TrackPacker
 class TestTrackPack(unittest.TestCase):
     @patch("os.walk")
     def test_discover_audiofiles_returns_audio_files(self, walk_mock) -> None:
+        export_dir = Path("/tmp/export")
+
         walk_mock.return_value = _create_walk_files(
             [
                 "proj stem2.wav",
@@ -35,13 +38,13 @@ class TestTrackPack(unittest.TestCase):
             ]
         )
 
-        trackpacker = TrackPacker("proj", "/tmp/export")
+        trackpacker = TrackPacker("proj", str(export_dir))
         (master, stems) = trackpacker.discover_audiofiles()
-        walk_mock.assert_called_with("/tmp/export")
+        walk_mock.assert_called_with(str(export_dir))
         self.assertEqual("proj.wav", master)
         self.assertListEqual(
             _files_in_dir(
-                "/tmp/export",
+                export_dir,
                 [
                     "proj stem2.wav",
                     "proj stem4.wav",
@@ -56,6 +59,7 @@ class TestTrackPack(unittest.TestCase):
     def test_discover_audiofiles_returns_only_related_audio_files(
         self, walk_mock
     ) -> None:
+        export_dir = Path("/tmp/export")
         walk_mock.return_value = _create_walk_files(
             [
                 "proj stem2.wav",
@@ -67,16 +71,17 @@ class TestTrackPack(unittest.TestCase):
             ]
         )
 
-        trackpacker = TrackPacker("proj", "/tmp/export")
+        trackpacker = TrackPacker("proj", str(export_dir))
         (_, stems) = trackpacker.discover_audiofiles()
         self.assertListEqual(
-            _files_in_dir("/tmp/export/", ["proj stem2.wav", "proj stem1.wav"]), stems
+            _files_in_dir(export_dir, ["proj stem2.wav", "proj stem1.wav"]), stems
         )
 
     @patch("os.walk")
     def test_discover_audiofiles_master_track_matches_project_name(
         self, walk_mock
     ) -> None:
+        export_dir = Path("/tmp/export")
         walk_mock.return_value = _create_walk_files(
             [
                 "example.wav",
@@ -86,32 +91,37 @@ class TestTrackPack(unittest.TestCase):
                 "proj stem3.wav",
             ]
         )
-        trackpacker = TrackPacker("example", "/tmp/export")
+        trackpacker = TrackPacker("example", str(export_dir))
         (master, _) = trackpacker.discover_audiofiles()
         self.assertEqual("example.wav", master)
 
     @patch("os.walk")
     def test_discover_audiofiles_fails_if_no_master(self, walk_mock) -> None:
+        export_dir = Path("/tmp/export")
         walk_mock.return_value = _create_walk_files(
             ["proj stem1.wav", "proj stem2.wav"]
         )
 
         with self.assertRaises(MissingFileException):
-            trackpacker = TrackPacker("proj", "/tmp/export")
+            trackpacker = TrackPacker("proj", str(export_dir))
             trackpacker.discover_audiofiles()
 
     @patch("os.walk")
     def test_discover_audiofiles_fails_if_no_stems(self, walk_mock) -> None:
+        export_dir = Path("/tmp/export")
         walk_mock.return_value = _create_walk_files(["proj.wav"])
 
         with self.assertRaises(MissingFileException):
-            trackpacker = TrackPacker("proj", "/tmp/export")
+            trackpacker = TrackPacker("proj", str(export_dir))
             trackpacker.discover_audiofiles()
 
     @patch("os.walk")
     def test_discover_audiofiles_returns_explicit_passed_audio_files(
         self, walk_mock
     ) -> None:
+        export_dir = Path("/tmp/export")
+        temp_dir = Path("/tmp/x")
+
         walk_mock.return_value = _create_walk_files(
             [
                 "proj stem2.wav",
@@ -122,60 +132,68 @@ class TestTrackPack(unittest.TestCase):
             ]
         )
 
-        trackpacker = TrackPacker("proj", "/tmp/export")
-        (master, stems) = trackpacker.discover_audiofiles(
-            _files_in_dir(
-                "/tmp/export", ["/tmp/x/proj stem1.wav", "/tmp/x/proj stem3.wav"]
-            )
-        )
-        walk_mock.assert_called_with("/tmp/export")
+        trackpacker = TrackPacker("proj", str(export_dir))
+
+        explicit_files_list = ["/tmp/x/proj stem1.wav", "/tmp/x/proj stem3.wav"]
+
+        (master, stems) = trackpacker.discover_audiofiles(explicit_files_list)
+        walk_mock.assert_called_with(str(export_dir))
         self.assertEqual("proj.wav", master)
         self.assertListEqual(
-            _files_in_dir("/tmp/x/", ["proj stem1.wav", "proj stem3.wav"]), stems
+            _files_in_dir(temp_dir, ["proj stem1.wav", "proj stem3.wav"]), stems
         )
 
     @patch("trackpack.trackpacker.ZipFile", autospec=True)
     def test_pack_files_creates_archive_of_stems(self, zip_mock) -> None:
-        trackpacker = TrackPacker("projname", "/tmp/proj/Export")
+        export_dir = Path("/tmp/proj/Export")
+        trackpacker = TrackPacker("projname", str(export_dir))
+
+        files_to_pack = _files_in_dir(export_dir, ["a.wav", "b.wav", "c.wav"])
+
         trackpacker.pack_files(
             "archivename",
-            _files_in_dir("/tmp/proj/Export", ["a.wav", "b.wav", "c.wav"]),
+            files_to_pack,
         )
         zip_mock.assert_has_calls(
             _create_zip_mock_calls(
                 "archivename",
-                "/tmp/proj/Export",
+                str(export_dir),
                 {"a.wav": "a.wav", "b.wav": "b.wav", "c.wav": "c.wav"},
             )
         )
 
     @patch("trackpack.trackpacker.ZipFile", autospec=True)
     def test_pack_files_removes_project_name_from_stems(self, zip_mock) -> None:
-        trackpacker = TrackPacker("proj1", "/tmp/x")
-        trackpacker.pack_files(
-            "archive1", _files_in_dir("/tmp/x", ["proj1 a.wav", "b.wav", "proj1 c.wav"])
+        export_dir = Path("/tmp/x")
+        trackpacker = TrackPacker("proj1", str(export_dir))
+
+        files_to_pack = _files_in_dir(
+            export_dir, ["proj1 a.wav", "b.wav", "proj1 c.wav"]
         )
+
+        trackpacker.pack_files("archive1", files_to_pack)
         zip_mock.assert_has_calls(
             _create_zip_mock_calls(
                 "archive1",
-                "/tmp/x",
+                str(export_dir),
                 {"proj1 a.wav": "a.wav", "b.wav": "b.wav", "proj1 c.wav": "c.wav"},
             )
         )
 
     @patch("trackpack.trackpacker.ZipFile", autospec=True)
     def test_pack_files_replaces_blanks_in_names(self, zip_mock) -> None:
-        trackpacker = TrackPacker("proj1", "/tmp/st u v w")
-        trackpacker.pack_files(
-            "archive1",
-            _files_in_dir(
-                "/tmp/st u v w", ["proj1 a a a.wav", "b 123.wav", "proj1 cd  efg.wav"]
-            ),
+        export_dir = Path("/tmp/st u v w")
+        trackpacker = TrackPacker("proj1", str(export_dir))
+
+        files_to_pack = _files_in_dir(
+            export_dir, ["proj1 a a a.wav", "b 123.wav", "proj1 cd  efg.wav"]
         )
+
+        trackpacker.pack_files("archive1", files_to_pack)
         zip_mock.assert_has_calls(
             _create_zip_mock_calls(
                 "archive1",
-                "/tmp/st u v w",
+                str(export_dir),
                 {
                     "proj1 a a a.wav": "a-a-a.wav",
                     "b 123.wav": "b-123.wav",
@@ -185,8 +203,8 @@ class TestTrackPack(unittest.TestCase):
         )
 
 
-def _files_in_dir(dirpath: str, filenames: list[str]) -> list[str]:
-    return [os.path.join(dirpath, file) for file in filenames]
+def _files_in_dir(dirpath: Path, filenames: list[str]) -> list[Path]:
+    return [Path(dirpath) / file for file in filenames]
 
 
 def _create_walk_files(files: list[str]):
@@ -196,16 +214,16 @@ def _create_walk_files(files: list[str]):
 def _create_zip_mock_calls(
     archive_name: str, proj_export_dir: str, files: dict[str, str]
 ):
+    proj_export_dir_path = Path(proj_export_dir)
+
     call_list = [
-        call(os.path.join(proj_export_dir, f"{archive_name}.zip"), "w"),
+        call(proj_export_dir_path / f"{archive_name}.zip", "w"),
         call().__enter__(),  # pylint: disable=unnecessary-dunder-call
     ]
 
     for name, entry in files.items():
+        file_path = proj_export_dir_path / name
         # pylint: disable=unnecessary-dunder-call
-        call_list.append(
-            call().__enter__().write(os.path.join(proj_export_dir, name), entry)
-        )
+        call_list.append(call().__enter__().write(file_path, entry))
     call_list.append(call().__exit__(None, None, None))
-
     return call_list
