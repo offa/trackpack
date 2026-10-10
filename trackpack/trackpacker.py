@@ -31,7 +31,7 @@ class TrackPacker:
 
     def discover_audiofiles(self, explicit_files: list[str] | None = None):
         filenames = []
-        for root, _, files in os.walk(str(self._export_dir)):
+        for _, _, files in os.walk(str(self._export_dir)):
             for f in files:
                 filenames.append(f)
 

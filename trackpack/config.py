@@ -45,7 +45,7 @@ class Config:
         try:
             config = yaml.safe_load(yaml_content)
         except yaml.YAMLError as e:
-            raise ValueError(f"Error parsing YAML content: {e}")
+            raise ValueError(f"Error parsing YAML content: {e}") from e
 
         self.name = config.get("name", "unnamed")
         self._archive_name = config.get("archive_name", self.name)
