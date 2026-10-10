@@ -7,7 +7,7 @@
 
 Packaging of audio / stem files.
 
-A packages consists of a required master track with `<prject name>.wav` name and optional stem files (`*.wav`).
+A package consists of a required master track with `<project name>.wav` name and optional stem files (`*.wav`).
 If no files are passed, all files found in `Export` are packed.
 
 Packed archives are saved to `Export` directory.
@@ -29,9 +29,9 @@ trackpack pack project1.wav stem1.wav stem2.wav
 Use `trackpack --help` for full usage documentation.
 
 
-### Yaml config format
+### YAML config format
 
-The Yaml configuration uses same format as the CLI arguments, but `_` instead of `-`:
+The YAML configuration uses the same format as the CLI arguments, but `_` instead of `-`:
 
 ```yaml
 # Required:
