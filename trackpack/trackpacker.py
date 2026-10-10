@@ -16,8 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from zipfile import ZipFile
 from pathlib import Path
+from zipfile import ZipFile
 
 
 class MissingFileException(Exception):
